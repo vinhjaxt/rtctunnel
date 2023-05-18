@@ -38,7 +38,7 @@ jobs:
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         files: |
-          ./rtctunnel-*
+          ./cmd/rtctunnel/rtctunnel-*
     # Done release
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
