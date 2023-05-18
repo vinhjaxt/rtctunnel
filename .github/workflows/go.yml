@@ -1,0 +1,41 @@
+name: Go
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.18
+
+    - name: Build
+      run: |
+        cd cmd/rtctunnel
+        go mod tidy
+        GOOS=linux GOARCH=amd64 go build -o rtctunnel-linux-gnu-amd64 -v ./...
+        GOOS=linux GOARCH=386 go build -o rtctunnel-linux-gnu-386 -v ./...
+        GOOS=windows GOARCH=amd64 go build -o rtctunnel-win64.exe -v ./...
+        GOOS=windows GOARCH=386 go build -o rtctunnel-win32.exe -v ./...
+
+    # Create release
+    - name: Generate release tag
+      id: tag
+      run: |
+        echo "::set-output name=release_tag::ActionBuild_$(date +"%Y.%m.%d_%H-%M-%S")"
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ steps.tag.outputs.release_tag }}
+        files: |
+          ./rtctunnel-*
+    # Done release
