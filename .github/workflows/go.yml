@@ -26,6 +26,7 @@ jobs:
         GOOS=linux GOARCH=386 go build -o rtctunnel-linux-gnu-386 -v ./...
         GOOS=windows GOARCH=amd64 go build -o rtctunnel-win64.exe -v ./...
         GOOS=windows GOARCH=386 go build -o rtctunnel-win32.exe -v ./...
+        ls -alvh
 
     # Create release
     - name: Generate release tag
@@ -39,3 +40,9 @@ jobs:
         files: |
           ./rtctunnel-*
     # Done release
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: write
+  pages: write
+  id-token: write
